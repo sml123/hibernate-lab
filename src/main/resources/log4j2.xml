@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+                                                    <!--seconds-->
+<Configuration status="WARN" name="app" monitorInterval="60">
+    <Appenders>
+
+        <RollingFile name="ERROR" fileName="${sys:APP_HOME}/logs/error.log"
+                     filePattern="${sys:APP_HOME}/logs/error-%i.log.gz">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>%date{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %C{0}.%M:%L %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="3"/>
+        </RollingFile>
+
+        <RollingFile name="APP" fileName="${sys:APP_HOME}/logs/app.log"
+                     filePattern="${sys:APP_HOME}/logs/app-%i.log.gz">
+            <!--<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>-->
+            <PatternLayout>
+                <Pattern>%date{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %C{0}.%M:%L %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="3"/>
+        </RollingFile>
+
+        <RollingFile name="SQL" fileName="${sys:APP_HOME}/logs/sql.log"
+                     filePattern="${sys:APP_HOME}/logs/sql-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%date{yyyy-MM-dd HH:mm} %-5level %C{0}.%M:%L %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="3"/>
+        </RollingFile>
+
+
+    </Appenders>
+    <Loggers>
+
+        <Logger name="jdbc.sqltiming" additivity ="false">
+            <level value="info" />
+            <AppenderRef ref="SQL"/>
+        </Logger>
+<!--
+        <Logger name="jdbc.resultset" additivity ="false">
+            <level value="error" />
+            <AppenderRef ref="SQL"/>
+        </Logger>
+-->
+        <!--<Logger name="jdbc.audit" additivity ="false">
+            <level value="error" />
+            <AppenderRef ref="SQL"/>
+        </Logger>-->
+        <Logger name="jdbc.sqlonly" additivity ="false" level="TRACE">
+            <AppenderRef ref="SQL"/>
+        </Logger>
+        <Logger name="jdbc.resultsettable" additivity ="false">
+            <AppenderRef ref="SQL"/>
+        </Logger>
+       <!-- <Logger name="jdbc.connection" additivity ="false">
+            <level value="error" />
+            <AppenderRef ref="SQL"/>
+        </Logger>-->
+     <!--   <Logger name="jdbc.resultsettable" additivity ="false">
+            <level value="error" />
+            <AppenderRef ref="SQL"/>
+        </Logger>-->
+
+        <Logger name="APP" level="info">
+            <AppenderRef ref="APP"/>
+        </Logger>
+         <Root level="DEBUG">
+            <AppenderRef ref="ERROR"/>
+            <AppenderRef ref="APP"/>
+            <!--<AppenderRef ref="ERROR"/>-->
+        </Root>
+
+    </Loggers>
+</Configuration>
