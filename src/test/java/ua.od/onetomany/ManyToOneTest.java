@@ -37,6 +37,40 @@ public class ManyToOneTest {
         ds.close();
     }
 
+    /**
+     1) select child0_.id as id1_0_0_, child0_.name as name2_0_0_, child0_.root_id as root_id3_0_0_,
+     root1_.id as id1_2_1_, root1_.name as name2_2_1_ from child child0_ left outer join root root1_
+     on child0_.root_id=root1_.id where child0_.id=1
+     */
+    @Test
+    public void simpleSelect() throws Exception {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Child child = em.find(Child.class, 1L);
+            Assert.assertNotNull(child.getRoot().getName());
+        } finally {
+            em.close();
+        }
+
+    }
+
+    /**
+     1) select child0_.id as id1_0_, child0_.name as name2_0_, child0_.root_id as root_id3_0_ from
+     child child0_ where child0_.id=1
+     2) select root0_.id as id1_2_0_, root0_.name as name2_2_0_ from root root0_ where root0_.id=1
+     */
+    @Test
+    public void simpleSelectHql() throws Exception {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Child child = em.createQuery("SELECT c FROM Child c WHERE c.id = :id", Child.class)
+                    .setParameter("id", 1L).getSingleResult();
+            Assert.assertNotNull(child.getRoot().getName());
+        } finally {
+            em.close();
+        }
+
+    }
 
     /**
      * select root1_.id as id1_2_, root1_.name as name2_2_ from child child0_ left outer join root
